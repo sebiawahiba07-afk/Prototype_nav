@@ -43,7 +43,7 @@
             background-image: radial-gradient(circle at 50% 50%, #111827 0%, #030712 100%);
         }
 
-        /* Presentation Frame Layout */
+        /* Presentation Frame Layout (Desktop) */
         .presentation-frame {
             display: flex;
             width: 1250px;
@@ -58,20 +58,20 @@
         /* Explanatory Left Panel */
         .info-panel {
             flex: 1.1;
-            padding: 50px;
+            padding: 40px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             background-image: radial-gradient(circle at 10% 20%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
             overflow-y: auto;
-            max-height: 800px;
+            max-height: 850px;
         }
 
         .info-panel h1 {
             font-family: 'Poppins', sans-serif;
             font-size: 32px;
             line-height: 1.2;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: var(--text-main);
             font-weight: 700;
         }
@@ -87,7 +87,7 @@
             font-size: 14px;
             color: #94A3B8;
             line-height: 1.6;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .building-tag {
@@ -100,9 +100,67 @@
             border-radius: 99px;
             font-size: 13px;
             font-weight: 600;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             border: 1px solid rgba(6, 182, 212, 0.2);
             align-self: flex-start;
+        }
+
+        /* QR Code Card */
+        .qr-promo-card {
+            background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .qr-code-holder {
+            background-color: white;
+            padding: 10px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 120px;
+            height: 120px;
+            flex-shrink: 0;
+        }
+
+        .qr-code-holder img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .qr-promo-text h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qr-promo-text h3 i {
+            color: var(--accent-cyan);
+        }
+
+        .qr-promo-text p {
+            font-size: 12px;
+            color: #94A3B8;
+            line-height: 1.4;
+            margin-bottom: 0;
+        }
+
+        .qr-status-text {
+            font-size: 10px;
+            color: var(--accent-cyan);
+            margin-top: 6px;
+            font-weight: 600;
         }
 
         /* Import Section Styles */
@@ -111,7 +169,7 @@
             border: 1px dashed rgba(255, 255, 255, 0.12);
             border-radius: 16px;
             padding: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .import-section h3 {
@@ -177,6 +235,30 @@
             background-color: rgba(16, 185, 129, 0.15);
             color: var(--accent-green);
         }
+
+        .ux-rules-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ux-rules-list li {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #94A3B8;
+        }
+
+        .ux-rules-list li i {
+            font-size: 16px;
+            margin-top: 2px;
+        }
+
+        .rule-pmr i { color: var(--accent-pmr); }
+        .rule-correct i { color: var(--accent-green); }
+        .rule-incorrect i { color: var(--accent-red); }
 
         /* Phone Column (Right) */
         .phone-column {
@@ -267,7 +349,7 @@
         /* Autocomplete Search input */
         .search-container {
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .search-bar-wrapper {
@@ -350,7 +432,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -813,12 +895,90 @@
             font-size: 10px;
             color: var(--text-muted);
         }
+
+        /* ==========================================================================
+           COMPORTEMENT MOBILE RESPONSIVE ULTRA-PERFORMANT (Pour corriger votre bug)
+           ========================================================================== */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+                background-color: var(--phone-bg);
+                overflow: hidden;
+                display: block; /* Évite les bugs de centrage flex sur Safari/Chrome Mobile */
+            }
+
+            .presentation-frame {
+                border-radius: 0;
+                border: none;
+                width: 100vw;
+                height: 100vh;
+                display: block;
+                box-shadow: none;
+                background-color: var(--phone-bg);
+            }
+
+            /* On masque complètement le panneau d'explications et d'imports sur mobile ! */
+            .info-panel {
+                display: none !important;
+            }
+
+            .phone-column {
+                padding: 0;
+                width: 100%;
+                height: 100vh;
+                border-left: none;
+                background-color: var(--phone-bg);
+            }
+
+            /* Le mockup de téléphone devient invisible pour que l'app prenne TOUT l'écran mobile */
+            .phone-mockup {
+                width: 100vw;
+                height: 100vh;
+                max-width: 100%;
+                max-height: 100%;
+                border-radius: 0;
+                border: none;
+                box-shadow: none;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* On masque l'encoche factice pour gagner de la place */
+            .phone-notch {
+                display: none !important;
+            }
+
+            .status-bar {
+                height: 30px;
+                padding: 10px 15px 0;
+            }
+
+            .screen {
+                padding: 10px;
+                height: calc(100vh - 30px);
+            }
+
+            /* Sizing de la carte sur mobile */
+            .map-container {
+                height: calc(50vh - 40px);
+                min-height: 220px;
+            }
+
+            .guidance-card {
+                padding: 12px;
+            }
+
+            .sound-switch {
+                bottom: 10px;
+                right: 10px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="presentation-frame">
-        <!-- Left Explanatory & Import Block -->
+        <!-- Left Explanatory & Import Block (Desktop Only) -->
         <div class="info-panel">
             <span class="building-tag">
                 <i class="fa-solid fa-wheelchair"></i> Gebäude 8-9 • Ground, 1st & 2nd Floors
@@ -828,11 +988,25 @@
                 Ce prototype interactif utilise vos vrais plans d'étage. Entrez n'importe quel numéro de salle (ex: <strong>9007</strong>, <strong>9107</strong> ou <strong>9202</strong>). L'application gérera automatiquement le parcours et le niveau correspondant.
             </p>
 
-            <!-- IMAGE IMPORT PANEL (Solves browser local filepath loading security) -->
+            <!-- SCAN ME / QR CODE PROMOTIONAL BLOCK -->
+            <div class="qr-promo-card">
+                <div class="qr-code-holder">
+                    <img id="dynamic-qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com" alt="Soutenance QR Code">
+                </div>
+                <div class="qr-promo-text">
+                    <h3><i class="fa-solid fa-qrcode"></i> Flashez pour tester !</h3>
+                    <p>
+                        Pendant votre présentation de projet, le jury peut scanner ce code avec son smartphone pour ouvrir l'application directement en plein écran sur son mobile.
+                    </p>
+                    <div class="qr-status-text" id="qr-status-url">Lien local de secours</div>
+                </div>
+            </div>
+
+            <!-- IMAGE IMPORT PANEL (Backup tool) -->
             <div class="import-section">
-                <h3><i class="fa-solid fa-file-import"></i> Charger vos plans réels</h3>
+                <h3><i class="fa-solid fa-file-import"></i> Charger vos plans manuellement</h3>
                 <p class="import-subtitle">
-                    Les navigateurs bloquent l'accès aux dossiers locaux. Chargez vos captures d'écran ci-dessous pour les afficher instantanément sur le simulateur.
+                    Outil de secours si les images ne chargent pas automatiquement en local.
                 </p>
                 <div class="upload-slots">
                     <!-- Ground Floor Slot -->
@@ -877,19 +1051,13 @@
                 <li class="rule-pmr">
                     <i class="fa-solid fa-circle-info"></i>
                     <div>
-                        <strong>♿ Mode Mobilité Réduite (PMR) :</strong> Activez ce mode pour éviter les escaliers et être guidé directement vers l'<strong>ascenseur (Aufzug)</strong> situé en haut à droite des plans.
+                        <strong>♿ Mode Mobilité Réduite (PMR) :</strong> Activez ce mode pour être guidé vers l'<strong>ascenseur (Aufzug)</strong> en haut à droite des plans.
                     </div>
                 </li>
                 <li class="rule-correct">
                     <i class="fa-solid fa-circle-check"></i>
                     <div>
-                        <strong>Validation en direct :</strong> Des flèches vertes et les indications <em>"Well done!"</em> ou <em>"You are almost there!"</em> s'affichent si vous êtes sur la bonne voie.
-                    </div>
-                </li>
-                <li class="rule-incorrect">
-                    <i class="fa-solid fa-circle-xmark"></i>
-                    <div>
-                        <strong>Alerte d'erreur instantanée :</strong> Si vous prenez un mauvais chemin (ou les escaliers en mode PMR), l'écran passe au <strong>Rouge</strong> : <em>"No, not this way!"</em> avec un signal d'alerte sonore.
+                        <strong>Validation en direct :</strong> Des flèches vertes et les indications <em>"Well done!"</em> s'affichent si vous êtes sur la bonne voie.
                     </div>
                 </li>
             </ul>
@@ -1011,8 +1179,8 @@
                             <!-- Backup information layer when local files are missing -->
                             <div class="map-placeholder-hint" id="map-hint">
                                 <i class="fa-regular fa-image"></i>
-                                <p style="font-weight: 600; margin-bottom: 4px;">Carte non chargée</p>
-                                <p style="font-size: 10px; opacity: 0.8;">Utilisez l'importateur d'images à gauche ou placez vos images dans le même dossier.</p>
+                                <p style="font-weight: 600; margin-bottom: 4px;">Plans introuvables</p>
+                                <p style="font-size: 10px; opacity: 0.8;">Vérifiez que vos fichiers s'appellent bien "image_27d6ad.png" à la racine de votre GitHub.</p>
                             </div>
 
                             <!-- GPS glowing dot -->
@@ -1065,6 +1233,22 @@
     </div>
 
     <script>
+        // Setup Dynamic Presentation QR Code on Window Load
+        window.addEventListener('load', () => {
+            const currentURL = window.location.href;
+            const qrImage = document.getElementById('dynamic-qr-image');
+            const qrStatus = document.getElementById('qr-status-url');
+
+            // Si ouvert en local double-clic, on pré-configure le QR code vers le vrai lien GitHub Pages
+            if (currentURL.startsWith('file:///')) {
+                qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sebiawahiba07-afk.github.io/Prototype_nav/";
+                qrStatus.innerText = "Code configuré vers votre site GitHub Pages public.";
+            } else {
+                qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(currentURL)}`;
+                qrStatus.innerText = "Scanner pour tester sur votre mobile !";
+            }
+        });
+
         // Room Database indexed by room number, tracking floor, wing and map image
         const roomDatabase = {
             // Ground Floor (EG)
@@ -1108,14 +1292,12 @@
                 const url = URL.createObjectURL(file);
                 localImages[floorKey] = url;
                 
-                // Update File Indicator Status Design
                 const statusEl = document.getElementById(`status-${floorKey}`);
                 statusEl.innerText = "Chargé ✓";
                 statusEl.classList.add('loaded');
                 
                 playSound('success');
 
-                // If currently inside navigation, trigger screen repaint
                 if (document.getElementById('view-navigation').classList.contains('active')) {
                     renderStep();
                 }
@@ -1131,7 +1313,7 @@
             document.getElementById('map-hint').style.opacity = '0';
         }
 
-        // Audio synthesis context setup (Zero costs, zero external assets, highly interactive)
+        // Web Audio Synthesizer
         let isAudioEnabled = true;
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -1146,7 +1328,6 @@
             }
         }
 
-        // Play feedback tones for correct paths, incorrect branches, or successful arrival
         function playSound(type) {
             if (!isAudioEnabled) return;
             if (audioCtx.state === 'suspended') {
@@ -1190,7 +1371,7 @@
             }
         }
 
-        // Search auto-suggestions
+        // Suggestions Box
         function showSuggestions(val) {
             const container = document.getElementById('suggestions-container');
             container.innerHTML = '';
@@ -1227,7 +1408,6 @@
             container.style.display = 'block';
         }
 
-        // PMR Toggle functions
         let isPmrActive = false;
         function togglePmrSwitch() {
             const toggle = document.getElementById('pmr-toggle');
@@ -1239,7 +1419,6 @@
             isPmrActive = e.target.checked;
         }
 
-        // State of active navigation session
         let navState = {
             currentStep: 1,
             targetRoomKey: '',
@@ -1269,20 +1448,19 @@
             document.getElementById('classroom-search').value = '';
         }
 
-        // Render current step of guidance based on target floor & PMR setting
+        // Navigation Steps Render Loop
         function renderStep() {
             const step = navState.currentStep;
             const target = navState.targetRoom;
             const pmr = navState.pmrMode;
 
-            // Base maps names
             const mapEGName = 'image_27d6ad.png';
             const map1GName = 'image_27cba7.png';
             const map2GName = 'image_27cf85.png';
 
             let mapImgName = mapEGName;
             let floorLabel = "EG";
-            let gpsX = "88%"; // Default Start (Entrance)
+            let gpsX = "88%"; 
             let gpsY = "75%";
             let title = "";
             let desc = "";
@@ -1290,9 +1468,7 @@
             let blinking = false;
             let controlsHtml = "";
 
-            // Dynamic Step Calculations
             if (step === 1) {
-                // STARTING STEP: Always at Entrance Halle (EG)
                 mapImgName = mapEGName;
                 floorLabel = "EG";
                 gpsX = "88%";
@@ -1310,14 +1486,12 @@
                 `;
             } 
             else if (step === 2) {
-                // DECISION STEP: Inside the lobby.
                 mapImgName = mapEGName;
                 floorLabel = "EG";
                 gpsX = "85%";
                 gpsY = "55%";
 
                 if (target.floor === 0) {
-                    // Target is on Ground Floor
                     title = "Locate ground wing corridor";
                     desc = `Your destination Room ${target.name} is on the Ground Floor. Move toward the corridors.`;
                     arrow = "fa-arrow-left";
@@ -1330,7 +1504,6 @@
                         </button>
                     `;
                 } else {
-                    // Target is on upper floor
                     if (pmr) {
                         title = "♿ PMR Mode: Head to Elevator";
                         desc = "To access upper floors, please use the elevator (Aufzug) situated on the upper-right section of the hall.";
@@ -1363,11 +1536,9 @@
                 }
             }
             else if (step === 3) {
-                // VERTICAL TRANSITION: Swapping background plan to 1st/2nd floor
                 floorLabel = target.floorLabel;
                 mapImgName = (target.floor === 1) ? map1GName : map2GName;
                 
-                // Positioned right outside stairs/elevator
                 if (pmr) {
                     gpsX = "90%";
                     gpsY = "20%";
@@ -1388,11 +1559,9 @@
                 `;
             }
             else if (step === 4) {
-                // ON THE TARGET FLOOR CORRIDOR
                 floorLabel = target.floorLabel;
                 mapImgName = (target.floor === 0) ? mapEGName : (target.floor === 1 ? map1GName : map2GName);
                 
-                // Position GPS based on target wing
                 if (target.wing === 'left') {
                     gpsX = "38%";
                     gpsY = "25%";
@@ -1415,13 +1584,12 @@
                     <button class="btn-control btn-control-correct" onclick="advanceStep(5)">
                         <i class="fa-solid fa-angle-right"></i> <span>Continue to room entry</span>
                     </button>
-                    <button class="btn-control btn-control-incorrect" onclick="triggerNavError('Turned into restricted area', 'This room is a locked laser lab. Stay on the main corridor!')">
+                    <button class="btn-control btn-control-incorrect" onclick="triggerNavError('Turned into restricted area', 'This room is locked. Stay on the main corridor!')">
                         <i class="fa-solid fa-triangle-exclamation"></i> <span>Enter side service shaft</span>
                     </button>
                 `;
             }
             else if (step === 5) {
-                // FINAL CLOSE PROXIMITY ALERT
                 floorLabel = target.floorLabel;
                 mapImgName = (target.floor === 0) ? mapEGName : (target.floor === 1 ? map1GName : map2GName);
                 blinking = true;
@@ -1448,17 +1616,16 @@
                 `;
             }
 
-            // Resolve Image (Choose imported blob or static file path)
+            // Fallback resolver for image URL (Root or Blob)
             let resolvedImageSrc = mapImgName;
-            if (floorLabel === "EG" && localImages['eg']) {
-                resolvedImageSrc = localImages['eg'];
-            } else if (floorLabel === "1. OG" && localImages['1og']) {
-                resolvedImageSrc = localImages['1og'];
-            } else if (floorLabel === "2. OG" && localImages['2og']) {
-                resolvedImageSrc = localImages['2og'];
+            if (floorLabel === "EG") {
+                resolvedImageSrc = localImages['eg'] || 'image_27d6ad.png';
+            } else if (floorLabel === "1. OG") {
+                resolvedImageSrc = localImages['1og'] || 'image_27cba7.png';
+            } else if (floorLabel === "2. OG") {
+                resolvedImageSrc = localImages['2og'] || 'image_27cf85.png';
             }
 
-            // Apply updates to DOM elements
             document.getElementById('current-floor-badge').innerText = floorLabel;
             document.getElementById('map-floor-image').src = resolvedImageSrc;
             
@@ -1502,7 +1669,6 @@
             const arrowIcon = document.getElementById('nav-arrow-icon');
             arrowIcon.className = "fa-solid fa-ban";
 
-            // Generate recovery back button
             document.getElementById('action-controls').innerHTML = `
                 <button class="btn-control btn-control-correct" onclick="renderStep()">
                     <i class="fa-solid fa-rotate-left"></i> <span>Return to correct route</span>
