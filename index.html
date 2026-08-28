@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HTW Saar Campus - Gebäude 8 Navigation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-page: #0B0F19;
+            --phone-bg: #050811;
+            --surface: #131C2E;
+            --surface-hover: #1E2D4A;
+            --accent-green: #10B981;
+            --accent-red: #EF4444;
+            --accent-cyan: #06B6D4;
+            --accent-pmr: #3B82F6;
+            --text-main: #F8FAFC;
+            --text-muted: #64748B;
+            --border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(circle at 50% 50%, #111827 0%, #030712 100%);
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            width: 390px;
+            height: 800px;
+            max-height: 96vh;
+            background-color: var(--phone-bg);
+            border-radius: 40px;
+            border: 8px solid #334155;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 50px rgba(6, 182, 212, 0.15);
+        }
+
+        .phone-notch {
+            width: 140px;
+            height: 24px;
+            background-color: #334155;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+            z-index: 100;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                background: var(--phone-bg);
+                padding: 0;
+                align-items: flex-start;
+            }
+            .app-container {
+                width: 100%;
+                height: 100vh;
+                max-height: 100vh;
+                border: none;
+                border-radius: 0;
+            }
+            .phone-notch {
+                display: none;
+            }
+        }
+
+        .status-bar {
+            height: 44px;
+            padding: 14px 25px 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #64748B;
+            z-index: 10;
+        }
+
+        .screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px 18px 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen-view {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+
+        .screen-view.active {
+            display: flex;
+        }
+
+        .search-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .search-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .search-bar-wrapper {
+            background-color: var(--surface);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-input {
+            background: none;
+            border: none;
+            color: white;
+            width: 100%;
+            outline: none;
+            font-size: 13.5px;
+        }
+
+        .suggestions-box {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #16223F;
+            border-radius: 12px;
+            margin-top: 5px;
+            max-height: 240px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            border: 1px solid var(--border-color);
+        }
+
+        .suggestion-item {
+            padding: 11px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            font-size: 12.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .suggestion-item:hover {
+            background: #20315A;
+        }
+
+        .pmr-toggle-card {
+            background-color: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            cursor: pointer;
+        }
+
+        .switch {
+            position: relative;
+            width: 38px;
+            height: 20px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background: #334155; transition: .3s; border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px;
+            background: white; transition: .3s; border-radius: 50%;
+        }
+        input:checked + .slider { background: var(--accent-pmr); }
+        input:checked + .slider:before { transform: translateX(18px); }
+
+        .destination-card {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            padding: 11px 13px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+
+        .map-container {
+            height: 290px;
+            background-color: #ffffff;
+            border-radius: 18px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
+        }
+
+        .map-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: relative;
+            z-index: 1;
+        }
+
+        #navCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .floor-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid var(--border-color);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: bold;
+            color: var(--accent-cyan);
+        }
+
+        .guidance-card {
+            background-color: var(--surface);
+            border-radius: 18px;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+            border: 1px solid var(--border-color);
+        }
+
+        .arrow-indicator {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 8px;
+            background-color: rgba(16, 185, 129, 0.12);
+            color: var(--accent-green);
+        }
+
+        .instruction-primary {
+            font-family: 'Poppins', sans-serif;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--accent-green);
+            margin-bottom: 3px;
+        }
+
+        .instruction-secondary {
+            font-size: 11px;
+            color: #94A3B8;
+            margin-bottom: 10px;
+        }
+
+        .btn-control {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            background: var(--accent-cyan);
+            color: #020617;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: auto;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .nav-header-title {
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--accent-cyan);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 250px;
+        }
+
+        .btn-exit-nav {
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: var(--accent-red);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="phone-notch"></div>
+        
+        <div class="status-bar">
+            <span id="live-clock">10:30</span>
+            <div style="display:flex; gap:6px;">
+                <i class="fa-solid fa-signal"></i>
+                <i class="fa-solid fa-wifi"></i>
+                <i class="fa-solid fa-battery-full"></i>
+            </div>
+        </div>
+
+        <div class="screen">
+            <!-- RECHERCHE -->
+            <div class="screen-view active" id="view-search">
+                <div class="search-title">Campus Guide</div>
+                <div class="search-subtitle">HTW Saar • Gebäude 8</div>
+
+                <!-- SWITCH PMR / BARRIEREFREI -->
+                <div class="pmr-toggle-card" onclick="togglePmrCard(event)">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <i class="fa-solid fa-wheelchair" style="color:var(--accent-pmr); font-size: 18px;"></i>
+                        <div style="text-align:left;">
+                            <div style="font-size:12px; font-weight:600;">Barrierefreier Modus</div>
+                            <div style="font-size:10px; color:var(--text-muted)">Aufzug statt Treppen</div>
+                        </div>
+                    </div>
+                    <label class="switch" onclick="event.stopPropagation()">
+                        <input type="checkbox" id="pmr-toggle" onchange="handlePmrChange(this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="search-container">
+                    <div class="search-bar-wrapper">
+                        <i class="fa-solid fa-magnifying-glass" style="color:var(--accent-cyan)"></i>
+                        <input type="text" class="search-input" id="room-input" placeholder="Raum suchen (z. B. 8025, 8102, 8202)..." oninput="doSearch(this.value)">
+                    </div>
+                    <div class="suggestions-box" id="suggest-box"></div>
+                </div>
+
+                <div style="font-size:11px; text-transform:uppercase; color:var(--text-muted); font-weight:600; margin: 10px 0 5px;">Schnellauswahl</div>
+                
+                <div class="destination-card" onclick="startNav('8025')">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="background:rgba(6,182,212,0.1); padding:8px; border-radius:8px; color:var(--accent-cyan);"><i class="fa-solid fa-chalkboard-user"></i></div>
+                        <div style="text-align:left;"><div style="font-size:13px; font-weight:600;">Hörsaal 8025</div><div style="font-size:10px; color:var(--text-muted)">EG • Gebäude 8</div></div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="font-size:11px; color:var(--text-muted)"></i>
+                </div>
+
+                <div class="destination-card" onclick="startNav('8102')">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="background:rgba(6,182,212,0.1); padding:8px; border-radius:8px; color:var(--accent-cyan);"><i class="fa-solid fa-flask"></i></div>
+                        <div style="text-align:left;"><div style="font-size:13px; font-weight:600;">Labor 8102</div><div style="font-size:10px; color:var(--text-muted)">1. OG • Gebäude 8</div></div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="font-size:11px; color:var(--text-muted)"></i>
+                </div>
+
+                <div class="destination-card" onclick="startNav('8202')">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="background:rgba(6,182,212,0.1); padding:8px; border-radius:8px; color:var(--accent-cyan);"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <div style="text-align:left;"><div style="font-size:13px; font-weight:600;">Hörsaal 8202</div><div style="font-size:10px; color:var(--text-muted)">2. OG • Gebäude 8</div></div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="font-size:11px; color:var(--text-muted)"></i>
+                </div>
+            </div>
+
+            <!-- NAVIGATION -->
+            <div class="screen-view" id="view-nav">
+                <div class="nav-header">
+                    <div class="nav-header-title" id="target-title">ZU RAUM</div>
+                    <button class="btn-exit-nav" onclick="stopNav()">Exit</button>
+                </div>
+                <div class="map-container" id="mapBox">
+                    <div class="floor-badge">ETAGE: <span id="floor-label">EG</span></div>
+                    <img src="plan_eg.png" id="floor-img" class="map-image" alt="Campus Plan">
+                    <canvas id="navCanvas"></canvas>
+                </div>
+                <div class="guidance-card">
+                    <div class="arrow-indicator"><i class="fa-solid fa-arrow-right" id="arrow-icon"></i></div>
+                    <div class="instruction-primary" id="instr-main">Geradeaus gehen</div>
+                    <div class="instruction-secondary" id="instr-sub">Folgen Sie der Leitlinie.</div>
+                    <div id="nav-actions" style="width:100%; margin-top:auto;"></div>
+                </div>
+            </div>
+
+            <!-- SUCCÈS -->
+            <div class="screen-view" id="view-success">
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center;">
+                    <i class="fa-solid fa-circle-check" style="font-size:54px; color:var(--accent-green); margin-bottom:15px;"></i>
+                    <h2 style="font-size:22px; font-family:'Poppins', sans-serif;">Ziel erreicht!</h2>
+                    <p style="color:var(--text-muted); font-size:12px; margin:8px 0 25px;" id="success-msg"></p>
+                    <button class="btn-control" onclick="stopNav()"><i class="fa-solid fa-rotate-left"></i> Neuer Raum</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Repères Universels Gebäude 8 :
+        // EINGANG EG : [64, 86]
+        // HALLE ZENTRAL / TREPPE MONUMENTAL : [64, 58]
+        // AUFZUG (PMR) FOND DE HALLE : [62, 17]
+
+        const rooms = {
+            // ================= ERDGESCHOSS (EG) =================
+            '8025': { name: 'Hörsaal 8025', floor: 0, label: 'EG', img: 'plan_eg.png', pts: [[64,86],[64,68],[85,68],[88,58]] },
+            '8024': { name: 'Büro 8024', floor: 0, label: 'EG', img: 'plan_eg.png', pts: [[64,86],[64,78],[82,78],[88,80]] },
+            '8018/1': { name: 'Maschinen/Antriebe 8018/1', floor: 0, label: 'EG', img: 'plan_eg.png', pts: [[64,86],[64,55],[48,55],[35,48]] },
+            '8018/2': { name: 'Maschinen/Antriebe 8018/2', floor: 0, label: 'EG', img: 'plan_eg.png', pts: [[64,86],[64,45],[48,45],[35,38]] },
+            '8001': { name: 'Technik 8001', floor: 0, label: 'EG', img: 'plan_eg.png', pts: [[64,86],[64,30],[42,30],[42,20]] },
+            '8002': { name: 'Büro 8002', floor: 0, label: 'EG', img: 'plan_eg.png', pts: [[64,86],[64,30],[32,30],[32,20]] },
+            '8003': { name: 'Büro 8003', floor: 0, label: 'EG', img: 'plan_eg.png', pts: [[64,86],[64,30],[23,30],[23,20]] },
+            '8004': { name: 'Büro 8004', floor: 0, label: 'EG', img: 'plan_eg.png', pts: [[64,86],[64,30],[13,30],[13,20]] },
+            '8005': { name: 'Büro 8005', floor: 0, label: 'EG', img: 'plan_eg.png', pts: [[64,86],[64,30],[5,30],[5,20]] },
+            '8026': { name: 'Technik 8026', floor: 0, label: 'EG', img: 'plan_eg.png', pts: [[64,86],[64,35],[85,35],[90,35]] },
+            '8027': { name: 'WC / Sanitär 8027', floor: 0, label: 'EG', img: 'plan_eg.png', pts: [[64,86],[64,25],[80,25],[80,18]] },
+
+            // ================= 1. OBERGESCHOSS (1. OG) =================
+            '8102': { name: 'Labor 8102', floor: 1, label: '1. OG', img: 'plan_1og.png', 
+                      pts_stairs: [[64,58],[64,30],[20,30],[12,25]], pts_pmr: [[62,17],[45,17],[20,30],[12,25]] },
+            '8101': { name: 'Technik 8101', floor: 1, label: '1. OG', img: 'plan_1og.png', 
+                      pts_stairs: [[64,58],[64,30],[42,30],[42,20]], pts_pmr: [[62,17],[42,17],[42,20]] },
+            '8112': { name: 'Labor Automat. Technik 8112', floor: 1, label: '1. OG', img: 'plan_1og.png', 
+                      pts_stairs: [[64,58],[64,35],[20,35],[15,40]], pts_pmr: [[62,17],[45,17],[20,35],[15,40]] },
+            '8113': { name: 'Labor Automatisierung 8113', floor: 1, label: '1. OG', img: 'plan_1og.png', 
+                      pts_stairs: [[64,58],[64,38],[40,38],[38,45]], pts_pmr: [[62,17],[45,17],[40,38],[38,45]] },
+            '8116': { name: 'Büro 8116', floor: 1, label: '1. OG', img: 'plan_1og.png', 
+                      pts_stairs: [[64,58],[64,75],[64,80]], pts_pmr: [[62,17],[64,58],[64,75],[64,80]] },
+            '8124': { name: 'Büro 8124', floor: 1, label: '1. OG', img: 'plan_1og.png', 
+                      pts_stairs: [[64,58],[64,35],[82,35],[88,35]], pts_pmr: [[62,17],[82,17],[82,35],[88,35]] },
+            '8125': { name: 'Büro 8125', floor: 1, label: '1. OG', img: 'plan_1og.png', 
+                      pts_stairs: [[64,58],[64,45],[82,45],[88,45]], pts_pmr: [[62,17],[82,17],[82,45],[88,45]] },
+            '8126': { name: 'Büro 8126', floor: 1, label: '1. OG', img: 'plan_1og.png', 
+                      pts_stairs: [[64,58],[64,55],[82,55],[88,55]], pts_pmr: [[62,17],[82,17],[82,55],[88,55]] },
+            '8127': { name: 'Büro 8127', floor: 1, label: '1. OG', img: 'plan_1og.png', 
+                      pts_stairs: [[64,58],[64,65],[82,65],[88,65]], pts_pmr: [[62,17],[82,17],[82,65],[88,65]] },
+            '8128': { name: 'Büro 8128', floor: 1, label: '1. OG', img: 'plan_1og.png', 
+                      pts_stairs: [[64,58],[64,75],[82,75],[88,75]], pts_pmr: [[62,17],[82,17],[82,75],[88,75]] },
+            '8120': { name: 'Archiv 8120', floor: 1, label: '1. OG', img: 'plan_1og.png', 
+                      pts_stairs: [[64,58],[64,28],[82,28],[88,28]], pts_pmr: [[62,17],[82,17],[82,28],[88,28]] },
+
+            // ================= 2. OBERGESCHOSS (2. OG) =================
+            '8202': { name: 'Hörsaal 8202', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,30],[20,30],[10,20]], pts_pmr: [[62,17],[45,17],[20,30],[10,20]] },
+            '8201': { name: 'Technik 8201', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,28],[42,28],[42,18]], pts_pmr: [[62,17],[42,17],[42,18]] },
+            '8210': { name: 'Büro 8210', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,30],[15,30],[15,45]], pts_pmr: [[62,17],[45,17],[15,30],[15,45]] },
+            '8211': { name: 'Büro 8211', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,30],[20,30],[20,45]], pts_pmr: [[62,17],[45,17],[20,30],[20,45]] },
+            '8212': { name: 'Büro 8212', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,30],[25,30],[25,45]], pts_pmr: [[62,17],[45,17],[25,30],[25,45]] },
+            '8213': { name: 'Büro 8213', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,30],[29,30],[29,45]], pts_pmr: [[62,17],[45,17],[29,30],[29,45]] },
+            '8226': { name: 'Archiv 8226', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,35],[36,35],[36,40]], pts_pmr: [[62,17],[45,17],[36,35],[36,40]] },
+            '8227': { name: 'Archiv 8227', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,35],[45,35],[45,40]], pts_pmr: [[62,17],[45,35],[45,40]] },
+            '8225': { name: 'Sprachlabor 8225', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[50,58],[45,60]], pts_pmr: [[62,17],[64,58],[50,58],[45,60]] },
+            '8224': { name: 'Sprachlabor / Büro 8224', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[50,58],[50,75],[45,75]], pts_pmr: [[62,17],[64,58],[50,58],[50,75],[45,75]] },
+            '8220': { name: 'Besprechung 8220', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,75],[64,80]], pts_pmr: [[62,17],[64,58],[64,75],[64,80]] },
+            '8233': { name: 'Büro 8233', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,28],[82,28],[88,28]], pts_pmr: [[62,17],[82,17],[82,28],[88,28]] },
+            '8234': { name: 'Büro 8234', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,38],[82,38],[88,38]], pts_pmr: [[62,17],[82,17],[82,38],[88,38]] },
+            '8235': { name: 'Büro 8235', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,45],[82,45],[88,45]], pts_pmr: [[62,17],[82,17],[82,45],[88,45]] },
+            '8236': { name: 'Büro 8236', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,58],[82,58],[88,58]], pts_pmr: [[62,17],[82,17],[82,58],[88,58]] },
+            '8237': { name: 'Büro 8237', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,65],[82,65],[88,65]], pts_pmr: [[62,17],[82,17],[82,65],[88,65]] },
+            '8238': { name: 'Büro 8238', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,72],[82,72],[88,72]], pts_pmr: [[62,17],[82,17],[82,72],[88,72]] },
+            '8239': { name: 'Büro 8239', floor: 2, label: '2. OG', img: 'plan_2og.png', 
+                      pts_stairs: [[64,58],[64,80],[82,80],[88,82]], pts_pmr: [[62,17],[82,17],[82,80],[88,82]] }
+        };
+
+        let state = { step: 1, target: null, pmr: false };
+
+        setInterval(() => {
+            let d = new Date();
+            document.getElementById('live-clock').innerText = d.getHours() + ":" + String(d.getMinutes()).padStart(2, '0');
+        }, 1000);
+
+        function doSearch(v) {
+            let box = document.getElementById('suggest-box');
+            box.innerHTML = "";
+            if(!v) { box.style.display="none"; return; }
+            let q = v.toLowerCase().trim();
+            let matches = Object.keys(rooms).filter(k => k.toLowerCase().includes(q) || rooms[k].name.toLowerCase().includes(q));
+            if(matches.length === 0) { box.style.display="none"; return; }
+            matches.forEach(k => {
+                let d = document.createElement('div');
+                d.className = "suggestion-item";
+                d.innerHTML = `<span><strong>Raum ${k}</strong> - ${rooms[k].name}</span><span style="color:var(--accent-cyan); font-size:10px; font-weight:bold;">${rooms[k].label}</span>`;
+                d.onclick = () => { startNav(k); box.style.display="none"; document.getElementById('room-input').value=""; };
+                box.appendChild(d);
+            });
+            box.style.display="block";
+        }
+
+        function togglePmrCard(e) {
+            const toggle = document.getElementById('pmr-toggle');
+            toggle.checked = !toggle.checked;
+            handlePmrChange(toggle.checked);
+        }
+
+        function handlePmrChange(val) {
+            state.pmr = Boolean(val);
+        }
+
+        function startNav(k) {
+            state.target = rooms[k];
+            state.step = 1;
+            document.getElementById('view-search').classList.remove('active');
+            document.getElementById('view-nav').classList.add('active');
+            document.getElementById('target-title').innerText = "ZU " + state.target.name.toUpperCase();
+            renderNav();
+        }
+
+        function stopNav() {
+            document.querySelectorAll('.screen-view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-search').classList.add('active');
+        }
+
+        function renderNav() {
+            let img = document.getElementById('floor-img');
+            let fl = document.getElementById('floor-label');
+            let pts = [];
+            let t = state.target;
+
+            if (state.step === 1) {
+                // Étape 1 : Sas d'entrée vers la Halle centrale
+                fl.innerText = "EG";
+                img.src = "plan_eg.png";
+                pts = [[64,86],[64,68]];
+                updateGuidance("Haupteingang betreten", "In die zentrale Halle gehen", "fa-arrow-up", 2);
+            } else if (state.step === 2) {
+                if (t.floor === 0) {
+                    // Salle au RDC
+                    fl.innerText = "EG";
+                    img.src = "plan_eg.png";
+                    pts = t.pts;
+                    updateGuidance("Dem Flur folgen", "Ziel befindet sich im Erdgeschoss (EG)", "fa-arrow-right", "FINISH");
+                } else if (t.floor === 1) {
+                    // Salle au 1er étage -> Monter 1 étage
+                    fl.innerText = "EG";
+                    img.src = "plan_eg.png";
+                    if (state.pmr) {
+                        pts = [[64,86],[64,30],[62,17]];
+                        updateGuidance("♿ Zum Aufzug gehen", "Aufzug nehmen: 1 Etage nach oben fahren ins 1. OG", "fa-elevator", 3);
+                    } else {
+                        pts = [[64,86],[64,58]];
+                        updateGuidance("Treppenhaus nutzen", "Treppe 1 Stockwerk nach oben gehen ins 1. OG", "fa-stairs", 3);
+                    }
+                } else if (t.floor === 2) {
+                    // Salle au 2ème étage -> Monter 2 étages
+                    fl.innerText = "EG";
+                    img.src = "plan_eg.png";
+                    if (state.pmr) {
+                        pts = [[64,86],[64,30],[62,17]];
+                        updateGuidance("♿ Zum Aufzug gehen", "Aufzug nehmen: 2 Etagen nach oben fahren bis ins 2. OG", "fa-elevator", 3);
+                    } else {
+                        pts = [[64,86],[64,58]];
+                        updateGuidance("Treppenhaus nutzen", "Treppe 2 Stockwerke nach oben gehen bis ins 2. OG", "fa-stairs", 3);
+                    }
+                }
+            } else if (state.step === 3) {
+                // Étape 3 : Arrivée à l'étage cible
+                fl.innerText = t.label;
+                img.src = t.img;
+                pts = state.pmr ? t.pts_pmr : t.pts_stairs;
+                updateGuidance("Vor dem Zielraum", "Sie stehen direkt vor der Tür", "fa-door-open", "FINISH");
+            }
+            setTimeout(() => drawPath(pts), 60);
+        }
+
+        function updateGuidance(m, s, i, next) {
+            document.getElementById('instr-main').innerText = m;
+            document.getElementById('instr-sub').innerText = s;
+            document.getElementById('arrow-icon').className = "fa-solid " + i;
+            let btn = document.getElementById('nav-actions');
+            if (next === "FINISH") {
+                btn.innerHTML = `<button class="btn-control" onclick="goSuccess()"><i class="fa-solid fa-check"></i> Raum betreten</button>`;
+            } else {
+                btn.innerHTML = `<button class="btn-control" onclick="state.step=${next}; renderNav();"><i class="fa-solid fa-arrow-right"></i> Weiter</button>`;
+            }
+        }
+
+        function goSuccess() {
+            document.getElementById('view-nav').classList.remove('active');
+            document.getElementById('view-success').classList.add('active');
+            document.getElementById('success-msg').innerHTML = `Sie haben <strong>${state.target.name}</strong> (${state.target.label}) erfolgreich erreicht.`;
+        }
+
+        function drawPath(pts) {
+            let can = document.getElementById('navCanvas');
+            let box = document.getElementById('mapBox');
+            can.width = box.clientWidth;
+            can.height = box.clientHeight;
+            let ctx = can.getContext('2d');
+            ctx.clearRect(0,0,can.width,can.height);
+            if (!pts || pts.length < 2) return;
+
+            let px = pts.map(p => ({ x: p[0]*can.width/100, y: p[1]*can.height/100 }));
+
+            // Ligne de guidage cyan lumineuse
+            ctx.beginPath();
+            ctx.moveTo(px[0].x, px[0].y);
+            px.forEach(p => ctx.lineTo(p.x, p.y));
+            ctx.strokeStyle = "#06B6D4";
+            ctx.lineWidth = 4;
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+            ctx.shadowColor = "#06B6D4";
+            ctx.shadowBlur = 8;
+            ctx.stroke();
+
+            // Point vert (départ)
+            ctx.beginPath();
+            ctx.arc(px[0].x, px[0].y, 5, 0, Math.PI*2);
+            ctx.fillStyle = "#10B981";
+            ctx.fill();
+
+            // Flèche orientée vers la destination
+            let p1 = px[px.length-2], p2 = px[px.length-1];
+            let angle = Math.atan2(p2.y-p1.y, p2.x-p1.x);
+            ctx.save();
+            ctx.translate(p2.x, p2.y);
+            ctx.rotate(angle);
+            ctx.beginPath();
+            ctx.moveTo(0,0);
+            ctx.lineTo(-11, -7);
+            ctx.lineTo(-11, 7);
+            ctx.fillStyle = "#06B6D4";
+            ctx.fill();
+            ctx.restore();
+        }
+
+        window.onresize = () => { if (state.target) renderNav(); };
+    </script>
+</body>
+</html>
